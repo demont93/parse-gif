@@ -1,0 +1,100 @@
+[Header]
+header                        47 49 46              gif            Byte[3]
+version                       38 39 61              89a            Byte[3]
+width                         20 00                 32             Word
+height                        34 00                 52             Word
+packed                        f0                    0b1111'0000
+- global_color_table_flag     1                     true
+- color_resolution            111                   8 bits per primary color
+- sort_flag                   0                     false
+- size_of_global_color_table  000                   2                         // 2 ** (000 + 1)
+background_color_index        00                    color index #0            // white in global
+aspect_ratio                  00                    no ration given
+
+[Global Color Table]
+#0                            ff ff ff              white
+#1                            00 00 00              black
+
+[Extension Block]
+extension_introducer          21                    !                        // fixed value
+graphic_control_label         f9                    f9                       // fixed value
+block_size                    04                    4                        // number of bytes in the block
+packed                        05                    0b0000'0101
+- reserved                    000
+// Ways to treat graphic after display.
+// 0: Not specified, no action needed.
+// 1: Do not dispose, leave graphic in place.
+// 2: Restore to background color.
+// 3: Restore graphic to what was rendered before display.
+// 4-7: Reserved.
+- disposal_method             001                   1                        // no dispose
+- user_input_flag             0                     false                    // no input expected
+- transparent_color_flag      1                     true                     // transparency index given
+delay_time                    00 00                 0                        // no delay
+transparency_index            02                    2                        // after global_color_index
+block_terminator              00                    0                        // fixed value
+
+[Image Descriptor]
+image_separator               2c                    ,              Byte       // fixed value
+left                          00 00                 0              Word
+top                           00 00                 0              Word 
+width                         20 00                 32             Word
+height                        34 00                 52             Word
+packed                        00                    0b0000'0000    Byte
+- local_color_table_flag      0                     false
+- interlace_flag              0                     false
+- sort_flag                   0                     false
+- reserved                    00                    
+- size_of_local_color_table   000                   2                         // 2 ** (000 + 1)
+
+[Table Based Image Data]
+lzw_minimum_code_size         02                    2              Byte       // initial num of bits for lzw codes
+block_byte_count              78                    120            Byte       // bytes in block
+8c 8f a9 cb 0b 0f a3 94 ed cc 7b ab c1 1c ea d0 75 5f c8
+8d 64 a6 9d 68 a5 4e 66 eb a5 70 2c 36 75 cd dc a5 bd e3 4e 
+bf cb 01 31 ac e1 ea 47 04 05 91 28 9f 42 97 14 26 67 a7 0d 
+35 64 bd 1a b5 2e 25 b7 f9 05 87 29 de 31 cd 1c c9 a2 01 6a 
+74 db fc 1e c7 c3 f3 6f 9d 7b d7 e6 af 7b 6a 7f f6 07 13 d8 
+32 a8 52 58 55 e6 96 08 b7 28 d7 48 f7 68 17 89 f7 51 b9 50 
+00 00
+
+[Trailer]                     3b                    ;              Byte       // fixed value
+
+
+10 001 100
+1000 111 1
+1010 1001
+
+
+6#1 10 001 100cc [2]    
+100 7#0111[3]
+
+
+
+
+
+clear code 100
+0000000    4947    3846    6139    0020    0034    fff0    ff00    ffff
+0000010    0000    2100    04f9    0005    0200    2c00    0000    0000
+0000020    0020    0034    0200    8c78    a98f    0bcb    a30f    ed94
+0000030    7bcc    c1ab    ea1c    75d0    c85f    648d    9da6    a568
+0000040    664e    a5eb    2c70    7536    dccd    bda5    4ee3    cbbf
+0000050    3101    e1ac    47ea    0504    2891    429f    1497    6726
+0000060    0da7    6435    1abd    2eb5    b725    05f9    2987    31de
+0000070    1ccd    a2c9    6a01    db74    1efc    c3c7    6ff3    7b9d
+0000080    e6d7    7baf    7f6a    07f6    d813    a832    5852    e655
+0000090    0896    28b7    48d7    68f7    8917    51f7    50b9    0000
+00000a0    003b                                                        
+00000a1
+00000000  47 49 46 38 39 61 20 00  34 00 f0 ff 00 ff ff ff  |GIF89a .4.......|
+00000010  00 00 00 21 f9 04 05 00  00 02 00 2c 00 00 00 00  |...!.......,....|
+00000020  20 00 34 00 00 02 78 8c  8f a9 cb 0b 0f a3 94 ed  | .4...x.........|
+00000030  cc 7b ab c1 1c ea d0 75  5f c8 8d 64 a6 9d 68 a5  |.{.....u_..d..h.|
+00000040  4e 66 eb a5 70 2c 36 75  cd dc a5 bd e3 4e bf cb  |Nf..p,6u.....N..|
+00000050  01 31 ac e1 ea 47 04 05  91 28 9f 42 97 14 26 67  |.1...G...(.B..&g|
+00000060  a7 0d 35 64 bd 1a b5 2e  25 b7 f9 05 87 29 de 31  |..5d....%....).1|
+00000070  cd 1c c9 a2 01 6a 74 db  fc 1e c7 c3 f3 6f 9d 7b  |.....jt......o.{|
+00000080  d7 e6 af 7b 6a 7f f6 07  13 d8 32 a8 52 58 55 e6  |...{j.....2.RXU.|
+00000090  96 08 b7 28 d7 48 f7 68  17 89 f7 51 b9 50 00 00  |...(.H.h...Q.P..|
+000000a0  3b                                                |;|
+000000a1
