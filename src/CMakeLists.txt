@@ -1,2 +1,6 @@
 
-add_library(parse-gif ParseGif.h ParseGif.cpp)
+add_library(parsegif STATIC
+        ParseGif.cpp
+        BinaryFileBuf.cpp
+        Decoder.cpp
+        )
