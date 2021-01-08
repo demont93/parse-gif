@@ -41,8 +41,9 @@ TEST(AnimatedGif, TestParse) {
 }
 
 TEST(AnimatedGif, TestParse2) {
-  auto gif{parsegif::parse("./data/animated2.gif")};
-  ASSERT_EQ(gif.width, 256);
+  auto gif{parsegif::parse("./data/homer.gif")};
+  ASSERT_EQ(gif.width, 780);
+  ASSERT_EQ(gif.images[0].data[0].red, 245);
 //  ASSERT_EQ(gif.height, 29);
 //  ASSERT_EQ(gif.images.size(), 3);
 //  std::ranges::for_each(gif.images[0].data, [](auto rgba) {

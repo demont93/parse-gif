@@ -84,9 +84,9 @@ auto Decoder::interpret_codes(
 ) -> std::vector<RGBA> {
   std::vector<RGBA> ret_value{};
   ret_value.reserve(color_codes.size());
-  std::fstream f("./compare-debug-output", std::ios::out);
-  for (auto c : color_codes)
-    f << c << '\n';
+//  std::fstream f("./compare-debug-output", std::ios::out);
+//  for (auto c : color_codes)
+//    f << c << '\n';
   std::ranges::transform(
     color_codes,
     std::back_inserter(ret_value),

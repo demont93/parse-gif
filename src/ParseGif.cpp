@@ -79,7 +79,8 @@ auto parse_color_table(
 
   std::vector<Color> v{};
   v.reserve(global_color_table_size);
-  for (int i{}; i < global_color_table_size; ++i) {
+  for (int i{}; i < global_color_table_size; ++i
+    ) {
     auto red{buf.get_byte()};
     auto green{buf.get_byte()};
     auto blue{buf.get_byte()};
@@ -205,26 +206,35 @@ auto RGBA::operator==(const RGBA &rhs) const noexcept -> bool {
          alpha == rhs.alpha;
 }
 
-GifImage::GifImage(int height, int width, const std::vector<RGBA> &data)
-  : height(height), width(width), data(data) {}
+GifImage::GifImage(
+  int height, int width, int top, int left,
+  const std::vector<RGBA> &data
+) : height(height), width(width), top(top), left(left), data(data) {}
 
-GifImage::GifImage(int height, int width, std::vector<RGBA> &&data)
-  : height(height), width(width), data(data) {}
+GifImage::GifImage(
+  int height, int width, int top, int left,
+  std::vector<RGBA> &&data
+) : height(height), width(width), top(top), left(left), data(std::move(data)) {}
 
 GifImage::GifImage(const GifImage &rhs)
   : height(rhs.height), width(rhs.width), data(rhs.data) {}
 
 GifImage::GifImage(GifImage &&rhs) noexcept
-  : height(rhs.height), width(rhs.width), data(std::move(rhs.data)) {}
+  : height(rhs.height), width(rhs.width), top(rhs.top), left(rhs.left),
+    data(std::move(rhs.data)) {}
 
 auto process_gif_image(Decoder &decoder, BinaryFileBuf &buf)
 -> GifImage {
   auto graphic_rendering_block{parse_graphic_rendering_block(buf)};
   auto data{decoder.decode(graphic_rendering_block, buf)};
   assert(buf.get_byte() == 0);
-  return GifImage{graphic_rendering_block.image_descriptor.height,
-                  graphic_rendering_block.image_descriptor.width,
-                  std::move(data)};
+  return GifImage(
+    graphic_rendering_block.image_descriptor.height,
+    graphic_rendering_block.image_descriptor.width,
+    graphic_rendering_block.image_descriptor.top,
+    graphic_rendering_block.image_descriptor.left,
+    std::move(data)
+  );
 }
 
 }

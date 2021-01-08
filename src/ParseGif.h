@@ -12,7 +12,8 @@ struct Header {
   std::string signature;
   std::string version;
 
-  [[maybe_unused]] Header(const std::string &signature, const std::string &version);
+  [[maybe_unused]] Header(const std::string &signature,
+                          const std::string &version);
   Header(std::string &&signature, std::string &&version);
   Header(const Header &rhs) = default;
   Header(Header &&rhs) noexcept;
@@ -42,7 +43,7 @@ struct Color {
   int red;
   int green;
   int blue;
-  bool operator==(const Color& rhs) const noexcept;
+  bool operator==(const Color &rhs) const noexcept;
 };
 
 struct ColorTable {
@@ -95,8 +96,9 @@ struct GifDecodeData {
   LogicalScreenDescriptor logical_screen_descriptor;
   ColorTable global_color_table{};
 
-  GifDecodeData(Header header, LogicalScreenDescriptor logical_screen_descriptor,
-      ColorTable global_color_table);
+  GifDecodeData(Header header,
+                LogicalScreenDescriptor logical_screen_descriptor,
+                ColorTable global_color_table);
 };
 
 GifDecodeData parse_gif_decode_data(BinaryFileBuf &buf);
@@ -118,13 +120,16 @@ struct RGBA {
 struct GifImage {
   int height;
   int width;
+  int top;
+  int left;
   std::vector<RGBA> data{};
 
   GifImage() = default;
-  GifImage(int height, int width, const std::vector<RGBA>& data);
-  GifImage(int height, int width, std::vector<RGBA>&& data);
-  GifImage(const GifImage& rhs);
-  GifImage(GifImage&& rhs) noexcept;
+  GifImage(int height, int width, int top, int left,
+           const std::vector<RGBA> &data);
+  GifImage(int height, int width, int top, int left,  std::vector<RGBA> &&data);
+  GifImage(const GifImage &rhs);
+  GifImage(GifImage &&rhs) noexcept;
 };
 
 class Decoder;
@@ -138,6 +143,6 @@ struct Gif {
   std::vector<GifImage> images{};
 };
 
-Gif parse(const std::string& s);
+Gif parse(const std::string &s);
 
 }
