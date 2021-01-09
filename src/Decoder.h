@@ -26,8 +26,9 @@ class Decoder {
   auto get_image_data(BinaryFileBuf &buf,
                       const ColorTable &color_table,
                       size_t data_size) -> std::vector<int>;
-  auto interpret_codes(std::vector<int> &&color_codes,
-                       const ColorTable &color_table) -> std::vector<RGBA>;
+  std::vector<RGBA> interpret_codes(std::vector<int> &&color_codes,
+                                    const ColorTable &color_table,
+                                    const GraphicRenderingBlock &settings);
   auto process_code_in_dict(int code, int prev, std::vector<int> &ret_val)
   -> void;
   auto process_code_not_in_dict(int prev, std::vector<int> &ret_val)

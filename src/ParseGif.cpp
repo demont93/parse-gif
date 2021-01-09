@@ -227,7 +227,6 @@ auto process_gif_image(Decoder &decoder, BinaryFileBuf &buf)
 -> GifImage {
   auto graphic_rendering_block{parse_graphic_rendering_block(buf)};
   auto data{decoder.decode(graphic_rendering_block, buf)};
-  assert(buf.get_byte() == 0);
   return GifImage(
     graphic_rendering_block.image_descriptor.height,
     graphic_rendering_block.image_descriptor.width,

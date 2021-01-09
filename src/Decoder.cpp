@@ -33,6 +33,7 @@ std::vector<RGBA> Decoder::decode(
   auto color_codes{get_image_data(buf, color_table,
                                   data.image_descriptor.width *
                                   data.image_descriptor.height)};
+  assert(buf.get_byte() == 0);
   return interpret_codes(std::move(color_codes), color_table);
 }
 
@@ -78,21 +79,33 @@ auto Decoder::get_image_data(
   return ret_value;
 }
 
-auto Decoder::interpret_codes(
+std::vector<RGBA> Decoder::interpret_codes(
   std::vector<int> &&color_codes,
-  const ColorTable &color_table
-) -> std::vector<RGBA> {
+  const ColorTable &color_table,
+  const GraphicRenderingBlock &settings
+) {
   std::vector<RGBA> ret_value{};
   ret_value.reserve(color_codes.size());
-//  std::fstream f("./compare-debug-output", std::ios::out);
-//  for (auto c : color_codes)
-//    f << c << '\n';
-  std::ranges::transform(
-    color_codes,
-    std::back_inserter(ret_value),
-    [&](auto code) {
-        return RGBA(color_table.data[code], 255);
-    });
+
+  if (settings.graphic_control_extension.transparent_color_flag) {
+    std::ranges::transform(
+      color_codes,
+      std::back_inserter(ret_value),
+      [&](auto code) {
+        if (code == settings.graphic_control_extension.transparent_color_index)
+          return RGBA(Color{}, 0);
+        else
+          return RGBA(color_table.data[code], 255);
+      });
+  } else {
+    std::ranges::transform(
+      color_codes,
+      std::back_inserter(ret_value),
+      [&](auto code) {
+          return RGBA(color_table.data[code], 255);
+      });
+  }
+
   return ret_value;
 }
 
