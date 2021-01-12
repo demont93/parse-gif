@@ -140,6 +140,7 @@ auto process_gif_image(Decoder &decoder, BinaryFileBuf &buf)
 struct Gif {
   int height;
   int width;
+  Color background_color;
   std::vector<GifImage> images{};
 };
 

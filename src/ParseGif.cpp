@@ -173,8 +173,15 @@ Gif parse(const std::string &s) {
       while (buf.get_byte() != 0);
     }
   }
+
+  auto bg_color =
+    global_decode_data.logical_screen_descriptor.background_color_index;
+  auto bg_c = global_decode_data.logical_screen_descriptor.global_table_flag ?
+              global_decode_data.global_color_table.data[bg_color] :
+              Color{0,0,0};
   return Gif{global_decode_data.logical_screen_descriptor.height,
              global_decode_data.logical_screen_descriptor.width,
+             bg_c,
              std::move(images)};
 }
 
