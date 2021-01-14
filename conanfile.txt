@@ -1,5 +1,6 @@
 [requires]
 gtest/1.10.0
+lodepng/cci.20200615
 
 [generators]
 cmake

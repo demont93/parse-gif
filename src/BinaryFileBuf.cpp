@@ -1,75 +1,93 @@
-#include <stdexcept>
 #include "BinaryFileBuf.h"
+#include <stdexcept>
+#include <cstring>
+
+namespace parsegif
+{
 
 BinaryFileBuf::BinaryFileBuf(std::string s)
-  : file(fopen(s.c_str(), "rb")) {}
+  : file(fopen(s.c_str(), "rb"))
+{}
 
-bool BinaryFileBuf::is_open() const noexcept {
-  return static_cast<bool>(file);
-}
+bool BinaryFileBuf::is_open() const noexcept
+{ return static_cast<bool>(file); }
 
-auto BinaryFileBuf::fill() -> int {
+auto BinaryFileBuf::fill() -> int
+{
   auto to_read = 8192 - avail();
   int read;
 
-  while (to_read && !file_eof()) {
-    if (begin == end && is_empty) {
+  while (to_read && !file_eof())
+  {
+    if (begin == end && is_empty)
+    {
       begin = 0;
       read = fread(&buf, 1, 8192, file);
       to_read -= read;
       end = wrap_index(read);
-    } else if (begin < end) {
+    } else if (begin < end)
+    {
       read = fread(&buf[end], 1, 8192 - end, file);
       to_read -= read;
       end = wrap_index(end + read);
-    } else {
-      read = fread(&buf[end], 1, end - begin, file);
+    } else
+    {
+      read = fread(&buf[end], 1, begin - end, file);
       to_read -= read;
       end += read;
     }
     if (is_empty && read) is_empty = false;
-    _file_eof = feof(file);
-    if (ferror(file)) {
-      perror("Error reading file.");
-      throw std::runtime_error("Error reading file.");
-    }
+    if ((_file_eof = feof(file)))
+      break;
+    else if (ferror(file))
+      perror("error");
+      // throw std::runtime_error(strerror(errno));
   }
   return 8192 - to_read;
 }
 
-int BinaryFileBuf::avail() {
+int BinaryFileBuf::avail()
+{
   auto to{end < begin ? end + 8192 : end};
   return to - begin;
 }
 
-int BinaryFileBuf::get_byte() {
+int BinaryFileBuf::get_byte()
+{
   auto ret{peek_byte()};
   if (++begin == 8192) begin = 0;
   if (begin == end) is_empty = true;
   return ret;
 }
 
-int BinaryFileBuf::get_word() {
+int BinaryFileBuf::get_word()
+{
   return get_byte() + get_byte() * 0x100;
 }
 
-BinaryFileBuf::~BinaryFileBuf() {
-  fclose(file);
+BinaryFileBuf::~BinaryFileBuf()
+{
+  if (file) fclose(file);
 }
 
-bool BinaryFileBuf::file_eof() const noexcept {
+bool BinaryFileBuf::file_eof() const noexcept
+{
   return _file_eof;
 }
 
-bool BinaryFileBuf::is_done() const noexcept {
+bool BinaryFileBuf::is_done() const noexcept
+{
   return file_eof() && is_empty;
 }
 
-int BinaryFileBuf::peek_byte() {
+int BinaryFileBuf::peek_byte()
+{
   if (is_empty) fill();
   return static_cast<int>(buf[begin]);
 }
 
-auto BinaryFileBuf::wrap_index(int i) noexcept -> int {
+auto BinaryFileBuf::wrap_index(int i) noexcept -> int
+{
   return i % 8192;
+}
 }

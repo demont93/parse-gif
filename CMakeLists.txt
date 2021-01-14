@@ -3,6 +3,7 @@ project(parsegif)
 
 set(CMAKE_CXX_STANDARD 20)
 
+include_directories(src include)
 add_subdirectory(src)
 set_target_properties(parsegif PROPERTIES PUBLIC_HEADER include/parsegif.h)
 

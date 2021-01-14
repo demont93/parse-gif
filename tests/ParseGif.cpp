@@ -1,11 +1,10 @@
-#include "gtest/gtest.h"
-#include "../src/ParseGif.h"
+#include "ParseGif.h"
+#include <gtest/gtest.h>
 #include <fstream>
 
-//
 //TEST(ParseGif, test_parse_gif) {
 //  BinaryFileBuf buf("./data/sample_1.gif");
-//  auto gif{parsegif::parse_gif_decode_data(buf)};
+//  auto gif{parsegif::parse_decoder_settings(buf)};
 //  ASSERT_EQ(gif.header.signature, "GIF");
 //  ASSERT_EQ(gif.header.version, "89a");
 //  ASSERT_TRUE(gif.logical_screen_descriptor.global_table_flag);

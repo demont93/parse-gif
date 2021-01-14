@@ -1,13 +1,14 @@
-#include "../src/Decoder.h"
+#include "Decoder.h"
 #include <gtest/gtest.h>
 #include <algorithm>
 
-TEST(Decoder, TestCodeParser) {
+TEST(Decoder, TestCodeParser)
+{
   using namespace parsegif;
   BinaryFileBuf buf("./data/test-image-stream");
   auto minimum_code_size{buf.get_byte()};
   auto block_size{buf.get_byte()};
-  Decoder::CodeParser code_parser(buf,minimum_code_size,block_size);
+  Decoder::CodeParser code_parser(buf, minimum_code_size, block_size);
   ASSERT_EQ(code_parser.next(), 4);
   ASSERT_EQ(code_parser.next(), 1);
   ASSERT_EQ(code_parser.next(), 6);
@@ -19,11 +20,12 @@ TEST(Decoder, TestCodeParser) {
   ASSERT_EQ(code_parser.next(), 7);
 }
 
-TEST(Decoder, TestDecoder) {
+TEST(Decoder, TestDecoder)
+{
   using namespace parsegif;
   BinaryFileBuf buf("./data/test-image-stream");
   Decoder decoder(
-    Header{"", ""},
+    HeaderBlock{"", ""},
     LogicalScreenDescriptor(),
     ColorTable{std::vector<Color>{
       Color{255, 255, 255},

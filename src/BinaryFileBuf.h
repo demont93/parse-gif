@@ -5,22 +5,45 @@
 #include <cstdio>
 #include <string>
 
+namespace parsegif
+{
 
-class BinaryFileBuf {
+class BinaryFileBuf
+{
  public:
   BinaryFileBuf() = default;
+
   BinaryFileBuf(std::string s);
+
   ~BinaryFileBuf();
+
   int get_byte();
+
   int peek_byte();
+
   int get_word();
+
   int avail();
+
   auto fill() -> int;
-  template<typename T>
-  T copy_n_char(size_t n, T out);
+
+  template<typename I>
+  requires std::output_iterator<I, int>
+  I copy_n(size_t n, I out)
+  {
+    for (int i{}; i < n; ++i)
+    {
+      *(out++) = static_cast<int>(get_byte());
+    }
+    return out;
+  }
+
   [[nodiscard]] bool is_open() const noexcept;
+
   [[nodiscard]] bool file_eof() const noexcept;
+
   [[nodiscard]] bool is_done() const noexcept;
+
  private:
   std::array<u_char, 8192> buf;
   FILE *file{nullptr};
@@ -31,11 +54,4 @@ class BinaryFileBuf {
 
   [[nodiscard]] static auto wrap_index(int i) noexcept -> int;
 };
-
-template<typename T>
-T BinaryFileBuf::copy_n_char(size_t n, T out) {
-  for (int i{}; i < n; ++i) {
-    *(out++) = static_cast<char>(get_byte());
-  }
-  return out;
 }
